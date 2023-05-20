@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import PopupWithForm from "./PopupWithForm";
 import {inputChangeAvatarProps} from '../utils/inputsPropsConstants';
 
@@ -21,11 +21,6 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar
   // очищаем инпут
   avatarRef.current.value = '';
   }
-
-    //СОЗДАЕМ ИСКУССВЕННУЮ ОШИБКУ
-  // useEffect(() => {
-  //   avatarRef.current.value = '';
-  // }, [isOpen])
 
   return (
     <PopupWithForm
