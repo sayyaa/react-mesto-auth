@@ -7,6 +7,11 @@ function Header() {
       <Link to="/">
         <img src={logo} alt="Логотип сайта" className="header__logo" />
       </Link>
+      <div className="header__info-wrapper">
+      <p className="header__email">email@ya.ru</p>
+      <Link to='/' className="header__link">Региливойти</Link>
+      </div>
+
     </header>
   );
 }

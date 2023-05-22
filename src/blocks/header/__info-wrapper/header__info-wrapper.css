@@ -1,0 +1,7 @@
+.header__info-wrapper {
+  display: flex;
+  gap: 24px;
+  padding-top: 6px;
+  margin: 0;
+  padding: 0;
+}
