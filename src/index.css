@@ -90,6 +90,12 @@
 @import url(./blocks/userdata/__question/userdata__question.css);
 @import url(./blocks/userdata/__question-link/userdata____question-link.css);
 
+/* Infotooltip */
+
+@import url(./blocks/infotooltip/__container/infotooltip__container.css);
+@import url(./blocks/infotooltip/__img/infotooltip__img.css);
+@import url(./blocks/infotooltip/__title/infotooltip__title.css);
+
 
 /* Root */
 

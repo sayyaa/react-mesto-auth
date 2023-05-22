@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Header from "./Header";
 import Main from "./Main";
-import Footer from "./Footer";
 import api from "../utils/api";
 import ImagePopup from "./ImagePopup";
 import EditProfilePopup from "./EditProfilePopup";
@@ -10,6 +9,7 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import Login from "./Login";
 import Register from "./Register";
+import InfoTooltip from "./InfoTooltip";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -31,6 +31,9 @@ function App() {
 
   // стейт переменная, отвечающая за состояние открытие попапа аватара
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
+
+  //
+  const [isEditInfoTooltipOpen, setEditInfoTooltipOpen] = useState(true);
 
   // переменная состояния, хранящая объект информации о пользователе
   const [currentUser, setCurrentUser] = useState("");
@@ -109,6 +112,7 @@ function App() {
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
     setEditAvatarPopupOpen(false);
+    setEditInfoTooltipOpen(false);
     setSelectedCard({ name: "", link: "" });
   }
 
@@ -174,19 +178,9 @@ function App() {
           <Route path="/sign-in" element={<Login />}/>
         </Routes>
 
-        {/* <Main
-          cards={cards}
-          userName={currentUser.name}
-          userDescription={currentUser.about}
-          userAvatar={currentUser.avatar}
-          onCardClick={handleCardClick}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-        /> */}
-        {/* <Footer /> */}
+        <InfoTooltip isOpen={isEditInfoTooltipOpen} onClose={closeAllPopups}/>
+
+        {/* попап открытия изображения каточки */}
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
         {/* попап редактирования профиля */}

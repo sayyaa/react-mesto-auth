@@ -47,11 +47,10 @@ function Login() {
         required
       />
 
-<button className="button userdata__button">Войти</button>
+      <button className="button userdata__button">Войти</button>
       </form>
 
-      {/* <input className="form__input login__input" value={email || ''} onChange={handleChangeEmailInput}/> */}
-      {/* <input className="form__input login__input" value={password || ''} onChange={handleChangePasswordInput} /> */}
+      
 
 
     </section>
