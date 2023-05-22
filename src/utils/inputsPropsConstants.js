@@ -50,3 +50,23 @@ export const inputChangeAvatarProps = {
   placeholder: "Ссылка на изображение",
   minLength: "2",
 };
+
+export const inputEmailProps = {
+  classTag: "email-email",
+  id: "email-input",
+  inputName: "email",
+  type: "email",
+  placeholder: "Email",
+  minLength: "6",
+  maxLength: "30"
+}
+
+export const inputPasswordProps = {
+  classTag: "pass-passs",
+  id: "pass-input",
+  inputName: "pass",
+  type: "password",
+  placeholder: "Пароль",
+  minLength: "6",
+  maxLength: "30"
+}

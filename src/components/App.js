@@ -7,6 +7,7 @@ import ImagePopup from "./ImagePopup";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import Login from "./Login";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -165,9 +166,10 @@ function App() {
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
           />
+          && <Footer />
         } />
           <Route path="/sign-up" />
-          <Route path="/sign-in" />
+          <Route path="/sign-in" element={<Login />}/>
         </Routes>
         {/* <Main
           cards={cards}
@@ -181,7 +183,7 @@ function App() {
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
         /> */}
-        <Footer />
+        {/* <Footer /> */}
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
         {/* попап редактирования профиля */}

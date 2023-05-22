@@ -78,6 +78,14 @@
 @import url(./blocks/form/__save-btn/form__save-btn.css);
 @import url(./blocks/form/__save-btn/_disabled/form__save-btn_disabled.css);
 
+/* Userdata */
+
+@import url(./blocks/userdata/userdata.css);
+@import url(./blocks/userdata/__title/userdata__title.css);
+@import url(./blocks/userdata/__button/userdata__button.css);
+@import url(./blocks/userdata/__input/userdata__input.css);
+
+
 /* Root */
 
 @import url(./blocks/root/root.css);

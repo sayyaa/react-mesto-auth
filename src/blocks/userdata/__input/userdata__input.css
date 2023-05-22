@@ -1,0 +1,31 @@
+.userdata__input {
+    all: unset;
+    width: 100%;
+    min-width: 238px;
+    box-sizing: border-box;
+    background-color: inherit;
+    padding-bottom: 10px;
+    border: 0;
+    border-bottom: 2px solid rgba(204, 204, 204, 1);
+    font-family: inherit;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.21;
+    margin-bottom: 30px;
+  }
+
+.userdata__input:last-of-type {
+  margin-bottom: 175px;
+}
+  
+  @media screen and (min-width: 1280px) {
+    .userdata__input {
+      min-width: 358px; 
+    }
+
+    .userdata__input:last-of-type {
+      margin-bottom: 215px;
+    }
+  
+}
