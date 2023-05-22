@@ -8,6 +8,8 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 
+import { Routes, Route, Navigate } from "react-router-dom";
+
 // импорт объекта контекста
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
@@ -29,6 +31,10 @@ function App() {
 
   // переменная состояния, хранящая объект информации о пользователе
   const [currentUser, setCurrentUser] = useState("");
+
+  // стейт переменная статуса пользователя (авторизирован или нет)
+
+  const [loggedIn, setLoggedIn] = useState(true)
 
   useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -121,8 +127,8 @@ function App() {
     api
       .setProfileAvatar({ avatar })
       .then((newUserData) => {
-        setCurrentUser(newUserData)
-        setEditAvatarPopupOpen(false)
+        setCurrentUser(newUserData);
+        setEditAvatarPopupOpen(false);
       })
       .catch((err) => console.log(err));
   }
@@ -143,7 +149,27 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__content">
         <Header />
-        <Main
+        <Routes>
+          <Route
+            path="/"
+            element={!loggedIn ? <Navigate to='/sign-in' replace /> : 
+            <Main
+              cards={cards}
+              userName={currentUser.name}
+              userDescription={currentUser.about}
+              userAvatar={currentUser.avatar}
+              onCardClick={handleCardClick}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+          />
+        } />
+          <Route path="/sign-up" />
+          <Route path="/sign-in" />
+        </Routes>
+        {/* <Main
           cards={cards}
           userName={currentUser.name}
           userDescription={currentUser.about}
@@ -154,7 +180,7 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
-        />
+        /> */}
         <Footer />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
