@@ -10,11 +10,14 @@ import AddPlacePopup from "./AddPlacePopup";
 import Login from "./Login";
 import Register from "./Register";
 import InfoTooltip from "./InfoTooltip";
+import ProtectedRouteElement from "./ProtectedRoute";
 
 import { Routes, Route, Navigate } from "react-router-dom";
+// import { Redirect }
 
 // импорт объекта контекста
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
+
 
 function App() {
   // стейт переменная, в которой хранится массив карточек
@@ -33,14 +36,14 @@ function App() {
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
 
   //
-  const [isEditInfoTooltipOpen, setEditInfoTooltipOpen] = useState(true);
+  const [isEditInfoTooltipOpen, setEditInfoTooltipOpen] = useState(false);
 
   // переменная состояния, хранящая объект информации о пользователе
   const [currentUser, setCurrentUser] = useState("");
 
   // стейт переменная статуса пользователя (авторизирован или нет)
 
-  const [loggedIn, setLoggedIn] = useState(true)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -157,11 +160,8 @@ function App() {
       <div className="page__content">
         <Header />
         <Routes>
-          <Route
-            path="/"
-            element={!loggedIn ? <Navigate to='/sign-in' replace /> : 
-           <Main
-              cards={cards}
+        <Route path='*' element={<Navigate to='/' replace />} />
+        <Route path="/" element={<ProtectedRouteElement element={Main} loggedIn={loggedIn} cards={cards}
               userName={currentUser.name}
               userDescription={currentUser.about}
               userAvatar={currentUser.avatar}
@@ -170,10 +170,8 @@ function App() {
               onAddPlace={handleAddPlaceClick}
               onEditAvatar={handleEditAvatarClick}
               onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-          />
-        } />
-
+              onCardDelete={handleCardDelete}/>} />
+              
           <Route path="/sign-up" element={<Register />}/>
           <Route path="/sign-in" element={<Login />}/>
         </Routes>
