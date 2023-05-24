@@ -204,13 +204,20 @@ function App() {
     setStatusInfoTooltip(false);
   }
 
+  // функция выхода из аккаунта, удаляет jwt токен из локального хранилища
+  const logOut = () => {
+    localStorage.removeItem('jwt');
+    setEmail('');
+    setLoggedIn(false)
+    navigate("/sign-in", {replace: true})
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__content">
         <Header
           userEmail={email}
-          setUserEmail={setEmail}
-          setLoggedIn={setLoggedIn}
+          onSignOut={logOut}
         />
         <Routes>
           <Route path="*" element={<Navigate to="/" replace />} />
