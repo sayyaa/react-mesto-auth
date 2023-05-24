@@ -45,6 +45,11 @@ function App() {
 
   const [loggedIn, setLoggedIn] = useState(false)
 
+  // при успешной авторизации меняется стейт переменна loggedIn
+  function handleLogin(e) {
+    setLoggedIn(true);
+  }
+
   useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
       .then(([profileData, cardsData]) => {
@@ -173,7 +178,7 @@ function App() {
               onCardDelete={handleCardDelete}/>} />
               
           <Route path="/sign-up" element={<Register />}/>
-          <Route path="/sign-in" element={<Login />}/>
+          <Route path="/sign-in" element={<Login handleLogin={handleLogin} />}/>
         </Routes>
 
         <InfoTooltip isOpen={isEditInfoTooltipOpen} onClose={closeAllPopups}/>

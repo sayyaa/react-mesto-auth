@@ -64,7 +64,7 @@ export const inputEmailProps = {
 export const inputPasswordProps = {
   classTag: "pass-passs",
   id: "pass-input",
-  inputName: "pass",
+  inputName: "password",
   type: "password",
   placeholder: "Пароль",
   minLength: "6",
