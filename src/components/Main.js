@@ -10,7 +10,7 @@ function Main({
   onCardClick,
   cards,
   onCardLike,
-  onCardDelete
+  onCardDelete,
 }) {
 
   // подписываем компонент на контекст

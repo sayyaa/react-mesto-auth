@@ -11,13 +11,12 @@ import Login from "./Login";
 import Register from "./Register";
 import InfoTooltip from "./InfoTooltip";
 import ProtectedRouteElement from "./ProtectedRoute";
+import * as auth from "../utils/auth";
 
-import { Routes, Route, Navigate } from "react-router-dom";
-// import { Redirect }
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 // импорт объекта контекста
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-
 
 function App() {
   // стейт переменная, в которой хранится массив карточек
@@ -43,12 +42,10 @@ function App() {
 
   // стейт переменная статуса пользователя (авторизирован или нет)
 
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  // при успешной авторизации меняется стейт переменна loggedIn
-  function handleLogin(e) {
-    setLoggedIn(true);
-  }
+  // стейт переменная, хранит значение email пользователя для шапки сайта
+  const [email, setEmail] = useState('')
 
   useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -160,28 +157,76 @@ function App() {
       .catch((err) => console.log(err));
   }
 
+  // при успешной авторизации меняется стейт переменна loggedIn
+  function handleLogin() {
+    setLoggedIn(true);
+  }
+
+  // проверка jwt токена
+
+  const navigate = useNavigate();
+
+  // если у пользователя есть токен в localStorage, эта функция проверит, действующий он или нет
+
+
+  const tokenCheck = () => {
+    if (localStorage.getItem("jwt")) {
+      const jwt = localStorage.getItem("jwt");
+      if (jwt) {
+        auth
+          .checkToken(jwt)
+          .then((res) => {
+            setLoggedIn(true);
+            // userEmail = res.data.email;
+            setEmail(res.data.email || '')
+            navigate("/", { replace: true });
+          })
+          .catch((err) => console.log(err));
+      }
+    }
+  };
+
+  useEffect(() => {
+    // проверяем наличие jwt токена
+    tokenCheck();
+    setEmail(email)
+}, [loggedIn])
+
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__content">
-        <Header />
+        <Header userEmail={email} setUserEmail={setEmail} setLoggedIn={setLoggedIn}/>
         <Routes>
-        <Route path='*' element={<Navigate to='/' replace />} />
-        <Route path="/" element={<ProtectedRouteElement element={Main} loggedIn={loggedIn} cards={cards}
-              userName={currentUser.name}
-              userDescription={currentUser.about}
-              userAvatar={currentUser.avatar}
-              onCardClick={handleCardClick}
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}/>} />
-              
-          <Route path="/sign-up" element={<Register />}/>
-          <Route path="/sign-in" element={<Login handleLogin={handleLogin} />}/>
+          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRouteElement
+                element={Main}
+                loggedIn={loggedIn}
+                cards={cards}
+                userName={currentUser.name}
+                userDescription={currentUser.about}
+                userAvatar={currentUser.avatar}
+                onCardClick={handleCardClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+              />
+            }
+          />
+
+          <Route path="/sign-up" element={<Register />} />
+          <Route
+            path="/sign-in"
+            element={<Login handleLogin={handleLogin} />}
+          />
         </Routes>
 
-        <InfoTooltip isOpen={isEditInfoTooltipOpen} onClose={closeAllPopups}/>
+        <InfoTooltip isOpen={isEditInfoTooltipOpen} onClose={closeAllPopups} />
 
         {/* попап открытия изображения каточки */}
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
