@@ -1,0 +1,23 @@
+.userdata__button {
+  color: black  ;
+  background-color: white;
+  font-size: inherit;
+  min-height: 46px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 358px;
+  transition: opacity .3s ease-in;
+  border-radius: 2px;
+}
+
+.userdata__button:hover {
+  opacity: .85;
+}
+
+@media screen and (min-width: 1280px) {
+  .userdata__button{
+    padding: 14px 0 18px;
+    max-height: 50px;
+    font-size: 18px;
+  }
+}

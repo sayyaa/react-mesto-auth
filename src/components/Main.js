@@ -1,6 +1,7 @@
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Card from "./Card";
 import { useContext } from "react";
+import Footer from "./Footer";
 
 function Main({
   onEditProfile,
@@ -9,7 +10,7 @@ function Main({
   onCardClick,
   cards,
   onCardLike,
-  onCardDelete
+  onCardDelete,
 }) {
 
   // подписываем компонент на контекст
@@ -57,6 +58,7 @@ function Main({
         ))}
         </ul>
       </section>
+      <Footer />
     </main>
   );
 }

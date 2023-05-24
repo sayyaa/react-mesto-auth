@@ -1,0 +1,11 @@
+.infotooltip__img {
+  margin-top: 50px;
+  margin-bottom: 40px;
+}
+
+@media screen and (min-width: 768px) {
+  .infotooltip__img {
+    margin-top: 60px;
+    margin-bottom: 30px;
+  }
+}

@@ -1,0 +1,10 @@
+.userdata {
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 1280px) {
+  .userdata {
+    max-width: 358px;
+  }
+}
