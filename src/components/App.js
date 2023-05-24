@@ -48,10 +48,11 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   // стейт переменная, хранит значение email пользователя для шапки сайта
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(false);
 
   useEffect(() => {
-    Promise.all([api.getUserData(), api.getInitialCards()])
+    if(loggedIn) {
+      Promise.all([api.getUserData(), api.getInitialCards()])
       .then(([profileData, cardsData]) => {
         // записываем объект с информацией о пользователе в переменную состояния currentUser;
         setCurrentUser(profileData);
@@ -59,7 +60,8 @@ function App() {
         setCards(cardsData);
       })
       .catch((err) => console.log(err));
-  }, []);
+    }
+  }, [loggedIn]);
 
   // при клике на карточку в стейт selectedCard добавляется ее имя и ссылка
   function handleCardClick(card) {
@@ -172,27 +174,23 @@ function App() {
   // если у пользователя есть токен в localStorage, эта функция проверит, действующий он или нет
 
   const tokenCheck = () => {
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");
+    const jwt = localStorage.getItem("jwt");
       if (jwt) {
         auth
           .checkToken(jwt)
           .then((res) => {
             setLoggedIn(true);
-            // userEmail = res.data.email;
             setEmail(res.data.email || "");
             navigate("/", { replace: true });
           })
           .catch((err) => console.log(err));
       }
-    }
   };
 
-  // при входе в систему проверяем токен и отрисовываем email
+  // при входе в систему проверяем токен
   useEffect(() => {
     // проверяем наличие jwt токена
     tokenCheck();
-    setEmail(email);
   }, [loggedIn]);
 
   // функция, открывает инфо-попап с УСПЕШНОЙ регистрацией
