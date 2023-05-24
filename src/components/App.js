@@ -34,8 +34,11 @@ function App() {
   // стейт переменная, отвечающая за состояние открытие попапа аватара
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
 
-  //
+  // стейт переменная, отвечающая за состояние открытие попапа уведомления о статусе регистрации
   const [isEditInfoTooltipOpen, setEditInfoTooltipOpen] = useState(false);
+
+  // стейт переменная, отвечающая за текст внутри открытого попапа уведомления о статусе регистрации (true: удачно, false: ошибка)
+  const [statusInfoToolTip, setStatusInfoTooltip] = useState("");
 
   // переменная состояния, хранящая объект информации о пользователе
   const [currentUser, setCurrentUser] = useState("");
@@ -45,7 +48,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   // стейт переменная, хранит значение email пользователя для шапки сайта
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     Promise.all([api.getUserData(), api.getInitialCards()])
@@ -168,7 +171,6 @@ function App() {
 
   // если у пользователя есть токен в localStorage, эта функция проверит, действующий он или нет
 
-
   const tokenCheck = () => {
     if (localStorage.getItem("jwt")) {
       const jwt = localStorage.getItem("jwt");
@@ -178,7 +180,7 @@ function App() {
           .then((res) => {
             setLoggedIn(true);
             // userEmail = res.data.email;
-            setEmail(res.data.email || '')
+            setEmail(res.data.email || "");
             navigate("/", { replace: true });
           })
           .catch((err) => console.log(err));
@@ -186,17 +188,32 @@ function App() {
     }
   };
 
+  // при входе в систему проверяем токен и отрисовываем email
   useEffect(() => {
     // проверяем наличие jwt токена
     tokenCheck();
-    setEmail(email)
-}, [loggedIn])
+    setEmail(email);
+  }, [loggedIn]);
 
+  // функция, открывает инфо-попап с УСПЕШНОЙ регистрацией
+  function successInfoTooltip() {
+    setEditInfoTooltipOpen(true);
+    setStatusInfoTooltip(true);
+  }
+  // функция, открывает инфо-попап с ОШИБКОЙ регистрации
+  function errorInfoTooltip() {
+    setEditInfoTooltipOpen(true);
+    setStatusInfoTooltip(false);
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__content">
-        <Header userEmail={email} setUserEmail={setEmail} setLoggedIn={setLoggedIn}/>
+        <Header
+          userEmail={email}
+          setUserEmail={setEmail}
+          setLoggedIn={setLoggedIn}
+        />
         <Routes>
           <Route path="*" element={<Navigate to="/" replace />} />
           <Route
@@ -219,14 +236,26 @@ function App() {
             }
           />
 
-          <Route path="/sign-up" element={<Register />} />
+          <Route
+            path="/sign-up"
+            element={
+              <Register
+                successPopup={successInfoTooltip}
+                errorPopup={errorInfoTooltip}
+              />
+            }
+          />
           <Route
             path="/sign-in"
             element={<Login handleLogin={handleLogin} />}
           />
         </Routes>
 
-        <InfoTooltip isOpen={isEditInfoTooltipOpen} onClose={closeAllPopups} />
+        <InfoTooltip
+          isOpen={isEditInfoTooltipOpen}
+          onClose={closeAllPopups}
+          statusInfoToolTip={statusInfoToolTip}
+        />
 
         {/* попап открытия изображения каточки */}
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />

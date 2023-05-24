@@ -6,7 +6,8 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import * as auth from "../utils/auth";
 
-function Register() {
+function Register({ successPopup, errorPopup }) {
+  // используем "управляемые компоненты"
   const [formValue, setFormValue] = useState({
     email: "",
     password: "",
@@ -14,26 +15,34 @@ function Register() {
 
   const navigate = useNavigate();
 
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+    // все ивенты в форме сохраняются в стейт переменную
     setFormValue({
       ...formValue,
       [name]: value,
     });
   };
 
+  // при сабмите формы информация отправляется на сервера, при положительном ответе открывается попап статуса регистрации и пользователь перенаправляется на страницу входа
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formValue;
     console.log(email, password);
-    auth.register(email, password).then((res) => {
-      if (res) {
-        navigate("/sign-in", { replace: true });
-      } else {
-        return
-      }
-    });
+    auth
+      .register(email, password)
+      .then((res) => {
+        if (res) {
+          successPopup();
+          navigate("/sign-in", { replace: true });
+        } else {
+          errorPopup();
+          return;
+        }
+      })
+      .catch((err) => console.log("Ошибочка вышла:", err));
   };
 
   return (
