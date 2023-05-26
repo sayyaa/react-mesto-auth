@@ -1,17 +1,7 @@
 import logo from "../assets/svg/logo.svg";
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 
-function Header({ userEmail, setUserEmail, setLoggedIn }) {
-
-  const navigate = useNavigate();
-
-  // функция выхода из аккаунта, удаляет jwt токен из локального хранилища
-  const logOut = () => {
-    localStorage.removeItem('jwt');
-    setUserEmail('');
-    setLoggedIn(false)
-    navigate("/sign-in", {replace: true})
-  }
+function Header({ userEmail, onSignOut }) {
 
   return (
     <header className="header">
@@ -20,14 +10,12 @@ function Header({ userEmail, setUserEmail, setLoggedIn }) {
       </Link>
       <div className="header__info-wrapper">
         <p className="header__email">{userEmail}</p>
-
         <Routes>
-          <Route path="/" element={<Link to="/sign-in" className="header__link" onClick={logOut}>
+          <Route path="/" element={<Link to="/sign-in" className="header__link" onClick={onSignOut}>
               Выйти
             </Link>} />
-            
             <Route path="/sign-in" element={<Link to="/sign-up" className="header__link">
-              Зарегистрироваться
+              Регистрация
             </Link>} />
             <Route path="/sign-up" element={<Link to="/sign-in" className="header__link">
               Войти

@@ -50,16 +50,22 @@ function App() {
   // стейт переменная, хранит значение email пользователя для шапки сайта
   const [email, setEmail] = useState(false);
 
+  // переменная состояния, хранящая текст успешного действия пользователя
+  const [successText, setSuccessText] = useState("");
+
+  // переменная состояния, хранящая текст ошибочного действия пользователя
+  const [errorText, setErrorText] = useState("");
+
   useEffect(() => {
-    if(loggedIn) {
+    if (loggedIn) {
       Promise.all([api.getUserData(), api.getInitialCards()])
-      .then(([profileData, cardsData]) => {
-        // записываем объект с информацией о пользователе в переменную состояния currentUser;
-        setCurrentUser(profileData);
-        // добавляем карточки в массив cards
-        setCards(cardsData);
-      })
-      .catch((err) => console.log(err));
+        .then(([profileData, cardsData]) => {
+          // записываем объект с информацией о пользователе в переменную состояния currentUser;
+          setCurrentUser(profileData);
+          // добавляем карточки в массив cards
+          setCards(cardsData);
+        })
+        .catch((err) => console.log(err));
     }
   }, [loggedIn]);
 
@@ -162,9 +168,40 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  // при успешной авторизации меняется стейт переменна loggedIn
-  function handleLogin() {
-    setLoggedIn(true);
+  // при регистрации делаем запрос к серверу c данными, если приходит положительный ответ от сервера уведомляем пользователя и перенаправляем на страницу входа
+
+  function handleRegister(email, password) {
+    auth
+      .register(email, password)
+      .then((res) => {
+        if (res) {
+          setSuccessText("Вы успешно зарегистрировались!");
+          successInfoTooltip();
+          navigate("/sign-in", { replace: true });
+        }
+      })
+      .catch((err) => {
+        setErrorText("Что-то пошло не так! Попробуйте ещё раз.");
+        errorInfoTooltip();
+        console.log(err);
+      });
+  }
+
+  // при входе делаем запрос к серверу с нашими данными, получаем объект, если токен верен авторизируем пользователя и перенаправляем на главную страницу
+  function handleLogin(email, password) {
+    auth
+      .login(email, password)
+      .then((data) => {
+        if (data.token) {
+          setLoggedIn(true);
+          navigate("/", { replace: true });
+        }
+      })
+      .catch((err) => {
+        setErrorText("Что-то пошло не так! Попробуйте ещё раз.");
+        errorInfoTooltip();
+        console.log(err);
+      });
   }
 
   // проверка jwt токена
@@ -175,16 +212,16 @@ function App() {
 
   const tokenCheck = () => {
     const jwt = localStorage.getItem("jwt");
-      if (jwt) {
-        auth
-          .checkToken(jwt)
-          .then((res) => {
-            setLoggedIn(true);
-            setEmail(res.data.email || "");
-            navigate("/", { replace: true });
-          })
-          .catch((err) => console.log(err));
-      }
+    if (jwt) {
+      auth
+        .checkToken(jwt)
+        .then((res) => {
+          setLoggedIn(true);
+          setEmail(res.data.email || "");
+          navigate("/", { replace: true });
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   // при входе в систему проверяем токен
@@ -195,23 +232,27 @@ function App() {
 
   // функция, открывает инфо-попап с УСПЕШНОЙ регистрацией
   function successInfoTooltip() {
-    setEditInfoTooltipOpen(true);
     setStatusInfoTooltip(true);
+    setEditInfoTooltipOpen(true);
   }
   // функция, открывает инфо-попап с ОШИБКОЙ регистрации
   function errorInfoTooltip() {
-    setEditInfoTooltipOpen(true);
     setStatusInfoTooltip(false);
+    setEditInfoTooltipOpen(true);
   }
+
+  // функция выхода из аккаунта, удаляет jwt токен из локального хранилища
+  const logOut = () => {
+    localStorage.removeItem("jwt");
+    setEmail("");
+    setLoggedIn(false);
+    navigate("/sign-in", { replace: true });
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__content">
-        <Header
-          userEmail={email}
-          setUserEmail={setEmail}
-          setLoggedIn={setLoggedIn}
-        />
+        <Header userEmail={email} onSignOut={logOut} />
         <Routes>
           <Route path="*" element={<Navigate to="/" replace />} />
           <Route
@@ -236,23 +277,17 @@ function App() {
 
           <Route
             path="/sign-up"
-            element={
-              <Register
-                successPopup={successInfoTooltip}
-                errorPopup={errorInfoTooltip}
-              />
-            }
+            element={<Register onRegister={handleRegister} />}
           />
-          <Route
-            path="/sign-in"
-            element={<Login handleLogin={handleLogin} />}
-          />
+          <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
         </Routes>
 
         <InfoTooltip
           isOpen={isEditInfoTooltipOpen}
           onClose={closeAllPopups}
           statusInfoToolTip={statusInfoToolTip}
+          successText={successText}
+          errorText={errorText}
         />
 
         {/* попап открытия изображения каточки */}

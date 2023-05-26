@@ -3,19 +3,15 @@ import {
   inputEmailProps,
   inputPasswordProps,
 } from "../utils/inputsPropsConstants";
-import { Link, useNavigate } from "react-router-dom";
-import * as auth from "../utils/auth";
+import { Link } from "react-router-dom";
 
-function Register({ successPopup, errorPopup }) {
+function Register({ onRegister }) {
   // используем "управляемые компоненты"
   const [formValue, setFormValue] = useState({
     email: "",
     password: "",
   });
 
-  const navigate = useNavigate();
-
- 
   const handleChange = (e) => {
     const { name, value } = e.target;
     // все ивенты в форме сохраняются в стейт переменную
@@ -30,19 +26,7 @@ function Register({ successPopup, errorPopup }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, password } = formValue;
-    console.log(email, password);
-    auth
-      .register(email, password)
-      .then((res) => {
-        if (res) {
-          successPopup();
-          navigate("/sign-in", { replace: true });
-        } else {
-          errorPopup();
-          return;
-        }
-      })
-      .catch((err) => console.log("Ошибочка вышла:", err));
+    onRegister(email, password);
   };
 
   return (
