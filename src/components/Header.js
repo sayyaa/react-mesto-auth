@@ -10,14 +10,12 @@ function Header({ userEmail, onSignOut }) {
       </Link>
       <div className="header__info-wrapper">
         <p className="header__email">{userEmail}</p>
-
         <Routes>
           <Route path="/" element={<Link to="/sign-in" className="header__link" onClick={onSignOut}>
               Выйти
             </Link>} />
-            
             <Route path="/sign-in" element={<Link to="/sign-up" className="header__link">
-              Зарегистрироваться
+              Регистрация
             </Link>} />
             <Route path="/sign-up" element={<Link to="/sign-in" className="header__link">
               Войти

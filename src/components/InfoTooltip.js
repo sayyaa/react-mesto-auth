@@ -1,7 +1,13 @@
 import successPic from "../assets/svg/success.svg";
 import errorPic from "../assets/svg/error.svg";
 
-function InfoTooltip({ isOpen, onClose, statusInfoToolTip }) {
+function InfoTooltip({
+  isOpen,
+  onClose,
+  statusInfoToolTip,
+  successText,
+  errorText,
+}) {
   const popupOpenOrCloseLogic = `popup ${isOpen ? "popup_opened" : ""}`;
 
   return (
@@ -13,9 +19,7 @@ function InfoTooltip({ isOpen, onClose, statusInfoToolTip }) {
           className="infotooltip__img"
         />
         <h2 className="popup__title  infotooltip infotooltip__title">
-          {statusInfoToolTip
-            ? "Вы успешно зарегистрировались!"
-            : "Что-то пошло не так! Попробуйте ещё раз."}
+          {statusInfoToolTip ? successText : errorText}
         </h2>
         <button
           onClick={onClose}
