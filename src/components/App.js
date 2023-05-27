@@ -37,24 +37,17 @@ function App() {
   // стейт переменная, отвечающая за состояние открытие попапа уведомления о статусе регистрации
   const [isEditInfoTooltipOpen, setEditInfoTooltipOpen] = useState(false);
 
-  // стейт переменная, отвечающая за текст внутри открытого попапа уведомления о статусе регистрации (true: удачно, false: ошибка)
-  const [statusInfoToolTip, setStatusInfoTooltip] = useState("");
+  // стейт переменная, отвечающая за текст внутри открытого попапа уведомления о статусе регистрации (true: удачно, false: ошибка) и за текст внутри этого попапа
+  const [infoTooltipData, setInfoTooltipData] = useState({status: null, text: ''})
 
   // переменная состояния, хранящая объект информации о пользователе
   const [currentUser, setCurrentUser] = useState("");
 
   // стейт переменная статуса пользователя (авторизирован или нет)
-
   const [loggedIn, setLoggedIn] = useState(false);
 
   // стейт переменная, хранит значение email пользователя для шапки сайта
   const [email, setEmail] = useState(false);
-
-  // переменная состояния, хранящая текст успешного действия пользователя
-  const [successText, setSuccessText] = useState("");
-
-  // переменная состояния, хранящая текст ошибочного действия пользователя
-  const [errorText, setErrorText] = useState("");
 
   useEffect(() => {
     if (loggedIn) {
@@ -175,13 +168,13 @@ function App() {
       .register(email, password)
       .then((res) => {
         if (res) {
-          setSuccessText("Вы успешно зарегистрировались!");
+          // при успешном ответе показываем попап успеха
           successInfoTooltip();
           navigate("/sign-in", { replace: true });
         }
       })
       .catch((err) => {
-        setErrorText("Что-то пошло не так! Попробуйте ещё раз.");
+        // при неудачном ответе показываем попап ошибки
         errorInfoTooltip();
         console.log(err);
       });
@@ -198,7 +191,8 @@ function App() {
         }
       })
       .catch((err) => {
-        setErrorText("Что-то пошло не так! Попробуйте ещё раз.");
+        
+        // setErrorText("Что-то пошло не так! Попробуйте ещё раз.");
         errorInfoTooltip();
         console.log(err);
       });
@@ -232,12 +226,13 @@ function App() {
 
   // функция, открывает инфо-попап с УСПЕШНОЙ регистрацией
   function successInfoTooltip() {
-    setStatusInfoTooltip(true);
+    setInfoTooltipData({status: true, text: "Вы успешно зарегистрировались!"})
     setEditInfoTooltipOpen(true);
   }
+
   // функция, открывает инфо-попап с ОШИБКОЙ регистрации
   function errorInfoTooltip() {
-    setStatusInfoTooltip(false);
+    setInfoTooltipData({status: false, text: "Что-то пошло не так! Попробуйте ещё раз."})
     setEditInfoTooltipOpen(true);
   }
 
@@ -285,9 +280,7 @@ function App() {
         <InfoTooltip
           isOpen={isEditInfoTooltipOpen}
           onClose={closeAllPopups}
-          statusInfoToolTip={statusInfoToolTip}
-          successText={successText}
-          errorText={errorText}
+          infoTooltipData={infoTooltipData}
         />
 
         {/* попап открытия изображения каточки */}

@@ -32,7 +32,7 @@ function Register({ onRegister }) {
   return (
     <section className="userdata">
       <h1 className="userdata__title">Регистрация</h1>
-      <form className="form" onSubmit={handleSubmit}>
+      <form className="form" autocomplete="off" onSubmit={handleSubmit}>
         <input
           className={`userdata__input form__input form__input_${inputEmailProps.classTag}`}
           id={inputEmailProps.id}
