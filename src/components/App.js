@@ -191,8 +191,6 @@ function App() {
         }
       })
       .catch((err) => {
-        
-        // setErrorText("Что-то пошло не так! Попробуйте ещё раз.");
         errorInfoTooltip();
         console.log(err);
       });
